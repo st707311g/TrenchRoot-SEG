@@ -1,6 +1,6 @@
 # TrenchRoot-SEG: A deep learning-based phenotypic analysis tool for trench profile images.
 
-TrenchRoot-SEG is the Python program for root segmentation from trench profile images. TrenchRoot-SEG uses a deep learning-based prediction model for automatic root segmentation.
+TrenchRoot-SEG is the Python program for root segmentation from trench profile images. TrenchRoot-SEG uses a deep learning-based prediction model for automatic root segmentation
 
 ## Copyright
 
@@ -11,6 +11,10 @@ National Agriculture and Food Research Organization (2020)
     $ git clone https://github.com/st707311g/TrenchRoot-SEG.git
     $ cd TrenchRoot-SEG
 
+Download U-Net model:
+
+    $ wget https://rootomics.dna.affrc.go.jp/data/TrenchRoot-SEG.hdf5
+
 TrenchRoot-SEG was developed under Python (version 3.8.2). Check your Python version by the following command:
 
     $ python --version
@@ -19,6 +23,12 @@ After confirmation, install required modules:
 
     $ pip install --upgrade pip
     $ pip install -r requirements.txt
+
+TrenchRoot-SEG uses TensorFlow. So, install a version of CUDA and cuDNN that corresponds to the installed TensorFlow. With the following combination of TensorFlow, CUDA, and cuDNN well worked:
+
+- TensorFlow (version 2.4.0)
+- CUDA (version 10.1)
+- cuDNN (version 8.0.5)
 
 ## How to run
 
@@ -42,7 +52,7 @@ Twenty trench profile images are stored in *images* directory.
 
 For automatic root segmentation, run the following command:
 
-    $ python predict.py -i test_data
+    $ python predict.py -i trench_profile_test_data
 
 Segmented root images will be saved at the same directory where the trench profile images are located.
 
