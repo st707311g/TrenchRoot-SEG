@@ -47,7 +47,7 @@ Basic usage of RSAvis3D is
 
     $ python predict.py -i INDIR
 
-## Demonstration data analysis
+## Demonstration
 
 Twenty trench profile images are stored in *images* directory.
 
