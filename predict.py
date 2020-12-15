@@ -75,12 +75,9 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(1)
 
-    unet = UNet(pretrained_weights='model.hdf5')
-    unet.summary()
+    unet = UNet(pretrained_weights='TrenchRoot-SEG.hdf5')
 
-    indir = 'images'
-
-    files = sorted(glob(os.path.join(indir, '**/*'), recursive=True))
+    files = sorted(glob(os.path.join(args.indir, '**/*'), recursive=True))
     files = [f for f in files if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tif', '.tiff'))]
 
     for f in files:
