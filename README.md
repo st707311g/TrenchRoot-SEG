@@ -24,11 +24,14 @@ After confirmation, install required modules:
     $ pip install --upgrade pip
     $ pip install -r requirements.txt
 
-TrenchRoot-SEG uses TensorFlow. So, install a version of CUDA and cuDNN that corresponds to the installed TensorFlow. With the following combination of TensorFlow, CUDA, and cuDNN well worked:
+TrenchRoot-SEG uses TensorFlow. So, install a version of CUDA and cuDNN that corresponds to the installed TensorFlow. With the following combination of GUP, TensorFlow, CUDA, and cuDNN well worked:
 
+- NVIDIA GeForce RTX 2080 Ti
 - TensorFlow (version 2.4.0)
 - CUDA (version 10.1)
 - cuDNN (version 8.0.5)
+
+The CPU can process one file in 5 to 10 seconds (Intel Core i7-8700).
 
 ## How to run
 
