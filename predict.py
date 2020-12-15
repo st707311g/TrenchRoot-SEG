@@ -13,11 +13,9 @@ description_text: Final[str] = f'TrenchRoot-SEG (version {version}): A deep lear
 
 class Image(object):
     def __init__(self):
-        self.sep_imgs = None
         self.__in_img = None
         self.__out_img = None
         self.__block_size = None
-        self.overlap_size = 0
 
     def load(self, file: str):
         self.__in_file = file
