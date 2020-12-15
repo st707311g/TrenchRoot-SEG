@@ -1,4 +1,4 @@
-# TrenchRoot-SEG: A deep learning-based phenotypic analysis tool for trench profile images.
+# TrenchRoot-SEG: A deep learning-based phenotypic analysis tool for trench profile images
 
 TrenchRoot-SEG is the Python program for root segmentation from trench profile images. TrenchRoot-SEG uses a deep learning-based prediction model for automatic root segmentation
 
