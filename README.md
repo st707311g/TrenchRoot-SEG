@@ -49,7 +49,7 @@ Basic usage of RSAvis3D is
 
 ## Demonstration
 
-Twenty trench profile images are stored in *images* directory.
+Twenty trench profile images are stored in *trench_profile_test_data* directory.
 
 <img src="figures/trench_images.jpg">
 
