@@ -4,10 +4,6 @@
 
 TrenchRoot-SEG is the Python program for root segmentation from trench profile images. TrenchRoot-SEG uses a deep learning-based prediction model for automatic root segmentation.
 
-## Copyright
-
-National Agriculture and Food Research Organization (2020)
-
 ## Installation
 
     $ git clone https://github.com/st707311g/TrenchRoot-SEG.git
@@ -65,7 +61,13 @@ Segmented root images will be saved at the same directory where the trench profi
 
 ## Citation
 
-If you use this code or modified ones, please cite our work: Shota Teramoto et al. (2020) [A deep learning-based phenotypic analysis of rice root distribution from field images](https://doi.org/10.34133/2020/3194308) 
+Please cite the following article:
+
+Shota Teramoto et al. (2020) [A deep learning-based phenotypic analysis of rice root distribution from field images](https://doi.org/10.34133/2020/3194308) Plant Phenomics. Volume 2020, Article ID 3194308
+
+## Copyright
+
+National Agriculture and Food Research Organization (2020)
 
 ## Project homepage
 https://rootomics.dna.affrc.go.jp/en/
