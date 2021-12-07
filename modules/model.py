@@ -1,10 +1,10 @@
 ﻿import keras.backend as K
-from keras.models import Model
-from keras.layers import Input
+from keras.layers import Activation, BatchNormalization, Input
 from keras.layers.convolutional import Conv2D, MaxPooling2D, UpSampling2D
 from keras.layers.merge import concatenate
-from keras.layers import BatchNormalization, Activation
-from keras.optimizers import Adam
+from keras.models import Model
+from keras.optimizers import Adam #type:ignore
+
 
 class UNet(object):
     def dice_coef(self, y_true, y_pred):
