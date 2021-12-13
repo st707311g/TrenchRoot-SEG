@@ -1,9 +1,9 @@
-﻿import keras.backend as K
-from keras.layers import Activation, BatchNormalization, Input
-from keras.layers.convolutional import Conv2D, MaxPooling2D, UpSampling2D
-from keras.layers.merge import concatenate
-from keras.models import Model
-from keras.optimizers import Adam #type:ignore
+﻿import tensorflow.keras.backend as K
+from tensorflow.keras.layers import (Activation, BatchNormalization, Conv2D,
+                                     Input, MaxPooling2D, UpSampling2D,
+                                     concatenate)
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
 
 
 class UNet(object):

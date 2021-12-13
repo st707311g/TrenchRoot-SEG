@@ -16,11 +16,15 @@ description_text: Final[str] = f'TrenchRoot-SEG (version {version}): A deep lear
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=description_text)
-    parser.add_argument('-i', '--indir', type=str, help='import a target directory')
+    parser.add_argument('-i', '--indir', type=str, default='', help='import a target directory')
     parser.add_argument('-v', '--version', action='store_true', help='show version information')
     args = parser.parse_args()
-
+    
     logger.info(f'TrenchRoot-SEG version {version}')
+
+    if args.indir=='':
+        logger.error('Indicate input directory.')
+        exit(1)
 
     if args.version:
         exit(0)

@@ -2,8 +2,8 @@
 
 ![python](https://img.shields.io/badge/Python->3.8-lightgreen)
 ![developed_by](https://img.shields.io/badge/developed%20by-Shota_Teramoto-lightgreen)
-![version](https://img.shields.io/badge/version-1.1-lightgreen)
-![last_updated](https://img.shields.io/badge/last_update-December_7,_2021-lightgreen)
+![version](https://img.shields.io/badge/version-1.2-lightgreen)
+![last_updated](https://img.shields.io/badge/last_update-December_13,_2021-lightgreen)
 
 ![top image](figures/top_image.jpg) 
 
@@ -18,7 +18,7 @@ Download U-Net model:
 
     $ wget https://rootomics.dna.affrc.go.jp/data/TrenchRoot-SEG.hdf5
 
-TrenchRoot-SEG was developed under Python (version 3.8.2). Check your Python version by the following command:
+TrenchRoot-SEG was developed under Python (version 3.8.12). Check your Python version by the following command:
 
     $ python --version
 
@@ -30,7 +30,7 @@ After confirmation, install required modules:
 TrenchRoot-SEG uses TensorFlow. So, install a version of CUDA and cuDNN that corresponds to the installed TensorFlow. With the following combination of GUP, TensorFlow, CUDA, and cuDNN well worked:
 
 - NVIDIA GeForce RTX 2080 Ti
-- TensorFlow (version 2.4.0)
+- TensorFlow (version 2.7.0)
 - CUDA (version 10.1)
 - cuDNN (version 8.0.5)
 
@@ -127,4 +127,5 @@ https://rootomics.dna.affrc.go.jp/en/
 * version 1.1 (Dec 7, 2021)
   * learning code added
   * license notation corrected
-  
+* version 1.2 (Dec 13, 2021)
+  * operating environment updated

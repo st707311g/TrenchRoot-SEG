@@ -2,8 +2,8 @@ import os
 import random
 
 import numpy as np
-from keras.preprocessing.image import ImageDataGenerator
 from skimage import color, exposure
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from .__initialize import (separated_root_image_dir, separated_trace_image_dir,
                            training_data_dir)
