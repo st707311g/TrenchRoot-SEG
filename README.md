@@ -2,8 +2,8 @@
 
 ![python](https://img.shields.io/badge/Python->3.8-lightgreen)
 ![developed_by](https://img.shields.io/badge/developed%20by-Shota_Teramoto-lightgreen)
-![version](https://img.shields.io/badge/version-1.2-lightgreen)
-![last_updated](https://img.shields.io/badge/last_update-December_13,_2021-lightgreen)
+![version](https://img.shields.io/badge/version-1.3-lightgreen)
+![last_updated](https://img.shields.io/badge/last_update-June_20,_2022-lightgreen)
 
 ![top image](figures/top_image.jpg) 
 
@@ -129,3 +129,5 @@ https://rootomics.dna.affrc.go.jp/en/
   * license notation corrected
 * version 1.2 (Dec 13, 2021)
   * operating environment updated
+* version 1.3 (June 20, 2022)
+  * [fix] Inconvenience of not being able to assemble well when predicting huge images

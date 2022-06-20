@@ -1,61 +1,74 @@
+import logging
 import os
 import shutil
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Tuple
 
+import napari
 import numpy as np
 from skimage import io
 
 from .__initialize import logger
 
 
+@dataclass(frozen=True)
 class Image2D(object):
-    def __init__(self, img_file: str):
-        assert os.path.isfile(img_file)
-        self.img_file = img_file
-        self.__in_img: np.ndarray = np.array(io.imread(self.img_file))
+    image: np.array
+    logger: logging.Logger = field(init=False)
+    block_size: Tuple[int] = (256,256)
 
-        self.__out_img = None
-        self.__block_size = None
+    def __post_init__(self):
+        assert self.block_size[0] > 0 and self.block_size[0] > 0
+        object.__setattr__(self, 'logger', logging.getLogger(self.__class__.__name__))
+        self.logger.debug(f'a class constructed: {self.__class__.__name__}')
+        self.logger.debug(f'{self.image.shape=}')
+        self.logger.debug(f'{self.block_size=}')
+        self.logger.debug(f'{self.padding_size=}')
+        self.logger.debug(f'{self.padded_image_shape=}')
 
-    def separate(self, block_size=(256,256)) -> List[np.ndarray]:
-        img = self.__in_img.copy()
+    @property
+    def padding_size(self):
+        return tuple([self.image.shape[i]-(self.image.shape[i]//self.block_size[i])*self.block_size[i] for i in range(2)])
 
-        self.__block_size = block_size
-        padding_size = [img.shape[i]-(img.shape[i]//block_size[i])*block_size[i] for i in range(2)]
-        if len(img.shape)==3:
-            img = np.pad(img, [(0, padding_size[0]), (0, padding_size[1]), (0,0)] , mode='reflect')
+    @property
+    def padded_image_shape(self):
+        return_value = (self.image.shape[0]+self.padding_size[0], self.image.shape[1]+self.padding_size[1])
+        if len(self.image.shape)==3:
+            return return_value+(self.image.shape[2],)
         else:
-            img = np.pad(img, [(0, padding_size[0]), (0, padding_size[1])] , mode='reflect')
+            return return_value
 
-        imgs = []
-        for yi in range(img.shape[0]//block_size[0]):
-            for xi in range(img.shape[1]//block_size[1]):
-                crop = img[yi*block_size[0]:(yi+1)*block_size[0], 
-                           xi*block_size[1]:(xi+1)*block_size[1]]
-                imgs.append(crop)
+    def separate(self) -> List[np.ndarray]:
+        img = self.image
 
-        return imgs.copy()
+        pad_width = ((0, self.padding_size[0]), (0, self.padding_size[1]))
+        if len(img.shape)==3:
+            pad_width = pad_width+((0,0),)
+        img = np.pad(img, pad_width , mode='reflect')
 
-    def assemble(self, separated_imgs: list):
-        assert self.__in_img is not None
-        assert self.__block_size is not None
-        img = self.__in_img.copy()
-        block_size = self.__block_size
+        separated_images = []
+        for yi in range(img.shape[0]//self.block_size[0]):
+            for xi in range(img.shape[1]//self.block_size[1]):
+                crop = img[yi*self.block_size[0]:(yi+1)*self.block_size[0], 
+                           xi*self.block_size[1]:(xi+1)*self.block_size[1]]
+                separated_images.append(crop)
 
-        self.__out_img = np.zeros((img.shape[0], img.shape[1]), dtype=np.uint8)
+        self.logger.debug(f'number of image tiles: {len(separated_images)}')
+
+        return separated_images.copy()
+
+    def assemble(self, separated_images: list):
+        output_image = np.zeros(self.padded_image_shape[0:2], dtype=np.uint8)
 
         i = 0
-        for yi in range(self.__out_img.shape[0]//block_size[0]):
-            for xi in range(self.__out_img.shape[1]//block_size[1]):
-                self.__out_img[yi*block_size[0]:(yi+1)*block_size[0], xi*block_size[1]:(xi+1)*block_size[1]] = separated_imgs[i]
+        for yi in range(output_image.shape[0]//self.block_size[0]):
+            for xi in range(output_image.shape[1]//self.block_size[1]):
+                output_image[yi*self.block_size[0]:(yi+1)*self.block_size[0], xi*self.block_size[1]:(xi+1)*self.block_size[1]] = separated_images[i]
                 i += 1
 
-    def in_img(self):
-        self.__in_img
-        return self.__in_img
+        output_image = output_image[0:self.image.shape[0], 0:self.image.shape[1]]
 
-    def out_img(self):
-        return self.__out_img
+        return output_image
 
 class ImageSeparator2D(object):
     def __init__(self, indir: str, outdir: str) -> None:
@@ -76,7 +89,12 @@ class ImageSeparator2D(object):
         out_list = [os.path.join(self.outdir, f) for f in f_list]
         
         for in_fname, out_fname in zip(in_list, out_list):
-            images = Image2D(img_file=in_fname).separate(block_size=block_size)
+            try:
+                image = io.imread(in_fname)
+            except:
+                continue
+
+            images = Image2D(image=image).separate()
             logger.info(f'Separating image file: {in_fname}')
             for i, img in enumerate(images):
                 io.imsave("%s_%02d.tiff" % (out_fname[:-4], i), img)

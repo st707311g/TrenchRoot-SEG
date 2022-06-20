@@ -40,11 +40,17 @@ if __name__ == '__main__':
         if os.path.isfile(os.path.splitext(f)[0]+'_predicted.png'):
             continue
 
-        img = Image2D(img_file=f)
+        try:
+            image = io.imread(f)
+        except:
+            logger.error(f'could not read the image: {f}')
+            continue
+
+        img = Image2D(
+            image=image
+        )
         separated_imgs = np.array(img.separate()) / 255.
         predicted = unet.model().predict(separated_imgs, batch_size=1, verbose=1)
         predicted = (predicted[...,0]*255).astype(np.uint8)
-        img.assemble(separated_imgs=list(predicted))
-
-        assembled_img = img.out_img()
+        assembled_img = img.assemble(separated_images=list(predicted))
         io.imsave(os.path.splitext(f)[0]+'_predicted.png', assembled_img)
