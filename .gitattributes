@@ -1,0 +1,1 @@
+TrenchRoot-SEG.hdf5 filter=lfs diff=lfs merge=lfs -text
