@@ -30,7 +30,7 @@ separated_root_image_dir: Final[str] = os.path.join(training_data_dir, "root_ima
 trace_image_dir: Final[str] = os.path.join(training_data_dir, "trace_images")
 separated_trace_image_dir: Final[str] = os.path.join(training_data_dir, "trace_images_separated")
 
-version: Final[str] = "1.3"
+version: Final[str] = "1.4"
 
 for d in ["../results", "../data/for_train/root_images", "../data/for_train/trace_images"]:
     os.makedirs(os.path.join(os.path.dirname(__file__), d), exist_ok=True)

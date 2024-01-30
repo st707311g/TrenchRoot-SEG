@@ -2,8 +2,8 @@
 
 ![python](https://img.shields.io/badge/Python->3.8-lightgreen)
 ![developed_by](https://img.shields.io/badge/developed%20by-Shota_Teramoto-lightgreen)
-![version](https://img.shields.io/badge/version-1.3-lightgreen)
-![last_updated](https://img.shields.io/badge/last_update-June_20,_2022-lightgreen)
+![version](https://img.shields.io/badge/version-1.4-lightgreen)
+![last_updated](https://img.shields.io/badge/last_update-January_30,_2024-lightgreen)
 
 ![top image](figures/top_image.jpg) 
 
@@ -11,12 +11,10 @@ TrenchRoot-SEG is the Python program for root segmentation from trench profile i
 
 ## Installation
 
+*NOTE: A trained model file was uploaded as a git lfs file. Install `git lfs` in advance when you will use the pretrained model.*
+
     $ git clone https://github.com/st707311g/TrenchRoot-SEG.git
     $ cd TrenchRoot-SEG
-
-Download U-Net model:
-
-    $ wget https://rootomics.dna.affrc.go.jp/data/TrenchRoot-SEG.hdf5
 
 TrenchRoot-SEG was developed under Python (version 3.8.12). Check your Python version by the following command:
 
@@ -131,3 +129,5 @@ https://rootomics.dna.affrc.go.jp/en/
   * operating environment updated
 * version 1.3 (June 20, 2022)
   * [fix] Inconvenience of not being able to assemble well when predicting huge images
+* version 1.4 (January 30, 2024)
+  * [fix] A broken links have been corrected. The trained model is now included in this repository.
