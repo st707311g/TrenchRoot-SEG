@@ -5,7 +5,7 @@ import warnings
 from pathlib import Path
 
 import coloredlogs
-from keras.callbacks import CSVLogger, LearningRateScheduler
+from keras.callbacks import CSVLogger
 
 from modules.config import (
     root_image_dir,
@@ -56,16 +56,5 @@ if __name__ == "__main__":
 
     csv_logger = CSVLogger("results/trainlog.csv")
 
-    def step_decay(epoch):
-        return 0.1 / (epoch + 1)
-        x = 0.1
-        if epoch >= 10:
-            x = 0.01
-        if epoch >= 225:
-            x = 0.001
-        return x
-
-    lr_decay = LearningRateScheduler(step_decay)
-
-    hist = model.fit(train_generator, steps_per_epoch=training_image_number // batch_size, epochs=epochs, callbacks=[csv_logger, lr_decay])
+    hist = model.fit(train_generator, steps_per_epoch=training_image_number // batch_size, epochs=epochs, callbacks=[csv_logger])
     model.save_weights("results/TrenchRoot-SEG.hdf5")

@@ -22,8 +22,6 @@ class UNet(object):
         if os.environ.get("KERAS_BACKEND") == "torch":
             y_true = y_true.view(-1)
             y_pred = y_pred.view(-1)
-            y_true = y_true > 0.5
-            y_pred = y_pred > 0.5
             intersection = torch.sum(y_true * y_pred)
             return 2.0 * intersection / (torch.sum(y_true) + torch.sum(y_pred) + 1)
         else:
