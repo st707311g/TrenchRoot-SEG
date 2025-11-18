@@ -1,15 +1,36 @@
-﻿import tensorflow.keras.backend as K
-from tensorflow.keras.layers import Activation, BatchNormalization, Conv2D, Input, MaxPooling2D, UpSampling2D, concatenate
-from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
+﻿from __future__ import annotations
+
+import os
+
+import tensorflow as tf
+import torch
+from keras.layers import (
+    Activation,
+    BatchNormalization,
+    Conv2D,
+    Input,
+    MaxPooling2D,
+    UpSampling2D,
+    concatenate,
+)
+from keras.models import Model
+from keras.optimizers import Adam
 
 
 class UNet(object):
     def dice_coef(self, y_true, y_pred):
-        y_true = K.flatten(y_true)
-        y_pred = K.flatten(y_pred)
-        intersection = K.sum(y_true * y_pred)
-        return 2.0 * intersection / (K.sum(y_true) + K.sum(y_pred) + 1)
+        if os.environ.get("KERAS_BACKEND") == "torch":
+            y_true = y_true.view(-1)
+            y_pred = y_pred.view(-1)
+            y_true = y_true > 0.5
+            y_pred = y_pred > 0.5
+            intersection = torch.sum(y_true * y_pred)
+            return 2.0 * intersection / (torch.sum(y_true) + torch.sum(y_pred) + 1)
+        else:
+            y_true = tf.reshape(y_true, [-1])
+            y_pred = tf.reshape(y_pred, [-1])
+            intersection = tf.reduce_sum(y_true * y_pred)
+            return 2.0 * intersection / (tf.reduce_sum(y_true) + tf.reduce_sum(y_pred) + 1)
 
     def dice_coef_loss(self, y_true, y_pred):
         return 1.0 - self.dice_coef(y_true, y_pred)
@@ -58,7 +79,7 @@ class UNet(object):
         conv10 = Activation("sigmoid")(conv10)
 
         self.__model = Model(inputs=[inputs], outputs=[conv10])
-        self.__model.compile(optimizer=Adam(lr=1e-4), loss=self.dice_coef_loss, metrics=[self.dice_coef])
+        self.__model.compile(optimizer=Adam(learning_rate=1e-4), loss=self.dice_coef_loss, metrics=[self.dice_coef])
 
         if pretrained_weights:
             self.__model.load_weights(pretrained_weights)

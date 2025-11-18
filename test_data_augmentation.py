@@ -1,12 +1,25 @@
-﻿import os
+﻿import logging
+import os
+import warnings
+from pathlib import Path
 
+import coloredlogs
 import numpy as np
 from skimage import io
 
-from modules import __initialize  # noqa
-from modules.__initialize import logger, root_image_dir, separated_root_image_dir, separated_trace_image_dir, trace_image_dir, version
+from modules.config import (
+    root_image_dir,
+    separated_root_image_dir,
+    separated_trace_image_dir,
+    trace_image_dir,
+    version,
+)
 from modules.images import ImageSeparator2D
 from modules.training import get_train_generator
+
+logger = logging.getLogger(Path(__file__).name)
+coloredlogs.install(level=logging.INFO)
+warnings.filterwarnings("ignore")
 
 if __name__ == "__main__":
     logger.info(f"TrenchRoot-SEG version {version}")
@@ -19,8 +32,8 @@ if __name__ == "__main__":
     train_generator = get_train_generator(batch_size=36)
     images = train_generator.__next__()[0]
 
-    outdir = "results/da_test"
-    os.makedirs(outdir, exist_ok=True)
+    outdir = Path("results/da_test")
+    outdir.mkdir(parents=True, exist_ok=True)
     for i, img in enumerate(images):
         fname = os.path.join(outdir, f"img{i:02}.png")
         img = np.array(img * 255, dtype=np.uint8)

@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 import os
 import random
 
 import numpy as np
+from keras.src.legacy.preprocessing.image import ImageDataGenerator
 from skimage import color, exposure
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-from .__initialize import separated_root_image_dir, separated_trace_image_dir, training_data_dir
+from .config import (
+    separated_root_image_dir,
+    separated_trace_image_dir,
+    training_data_dir,
+)
 
 
 def preprocessing(ary) -> np.ndarray:
@@ -13,7 +19,7 @@ def preprocessing(ary) -> np.ndarray:
     ary = exposure.adjust_gamma(ary, gamma=random.uniform(0.95, 1.05))
     ary = np.array(color.rgb2hsv(ary))
     ary[:, :, 1] = ary[:, :, 1] + random.uniform(-0.2, 0.2)
-    ary = color.hsv2rgb(ary)  # * 255.0
+    ary = color.hsv2rgb(ary)
     ary = np.clip(ary, 0, 255).astype("uint8")
     return ary
 
@@ -46,5 +52,5 @@ def get_train_generator(seed=1, batch_size=10):
 
     for ximg, yimg in train_generator:
         ximg = np.array(ximg, dtype=np.float32) / 255
-        yimg = (np.array(yimg) >= 128) * 1.0
+        yimg = (np.array(yimg) >= 128).astype(np.float32)
         yield (ximg, yimg)

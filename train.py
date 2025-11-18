@@ -1,13 +1,26 @@
 ﻿import argparse
+import logging
 import os
+import warnings
+from pathlib import Path
 
-from keras.callbacks import CSVLogger
+import coloredlogs
+from keras.callbacks import CSVLogger, LearningRateScheduler
 
-from modules import __initialize  # noqa
-from modules.__initialize import logger, root_image_dir, separated_root_image_dir, separated_trace_image_dir, trace_image_dir, version
+from modules.config import (
+    root_image_dir,
+    separated_root_image_dir,
+    separated_trace_image_dir,
+    trace_image_dir,
+    version,
+)
 from modules.images import ImageSeparator2D
 from modules.model import UNet
 from modules.training import get_train_generator
+
+logger = logging.getLogger(Path(__file__).name)
+coloredlogs.install(level=logging.INFO)
+warnings.filterwarnings("ignore")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Training TrenchRoot-SEG model")
@@ -39,7 +52,20 @@ if __name__ == "__main__":
     model = unet.model()
     model.summary()
 
+    Path("results").mkdir(parents=True, exist_ok=True)
+
     csv_logger = CSVLogger("results/trainlog.csv")
 
-    hist = model.fit_generator(train_generator, steps_per_epoch=training_image_number // batch_size, epochs=epochs, callbacks=[csv_logger])
+    def step_decay(epoch):
+        return 0.1 / (epoch + 1)
+        x = 0.1
+        if epoch >= 10:
+            x = 0.01
+        if epoch >= 225:
+            x = 0.001
+        return x
+
+    lr_decay = LearningRateScheduler(step_decay)
+
+    hist = model.fit(train_generator, steps_per_epoch=training_image_number // batch_size, epochs=epochs, callbacks=[csv_logger, lr_decay])
     model.save_weights("results/TrenchRoot-SEG.hdf5")

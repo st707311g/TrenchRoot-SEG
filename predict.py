@@ -1,43 +1,60 @@
-﻿import argparse
+﻿from __future__ import annotations
+
+import argparse
+import logging
 import os
-from glob import glob
+import warnings
+from pathlib import Path
 from typing import Final
 
+import coloredlogs
 import numpy as np
 from skimage import io
 
-from modules import __initialize  # noqa
-from modules.__initialize import logger, version
+from modules.config import version
 from modules.images import Image2D
 from modules.model import UNet
 
-description_text: Final[str] = f"TrenchRoot-SEG (version {version}): A deep learning-based phenotypic analysis tool for trench profile images."
+logger = logging.getLogger(Path(__file__).name)
+coloredlogs.install(level=logging.INFO)
+warnings.filterwarnings("ignore")
+
+description_text: Final[str] = f"TrenchRoot-SEG {version}."
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=description_text)
-    parser.add_argument("-i", "--indir", type=str, default="", help="import a target directory")
+    parser.add_argument("-i", "--indir", type=Path, help="indicate a target directory")
     parser.add_argument("-v", "--version", action="store_true", help="show version information")
     args = parser.parse_args()
 
+    if args.version:
+        print(version)
+        exit(0)
+
     logger.info(f"TrenchRoot-SEG version {version}")
 
-    if args.indir == "":
-        logger.error("Indicate input directory.")
+    if args.indir is None:
+        logger.info("Indicate valid path by -i, --indir")
         exit(1)
 
-    if args.version:
-        exit(0)
+    indir = Path(args.indir)
+    if not indir.is_dir():
+        logger.info(f"Indicated path is not a directory: {indir}")
+        exit(1)
 
     unet = UNet(pretrained_weights="TrenchRoot-SEG.hdf5")
 
-    files = sorted(glob(os.path.join(args.indir, "**/*"), recursive=True))
-    files = [f for f in files if f.lower().endswith((".png", ".jpg", ".jpeg", ".tif", ".tiff"))]
+    for f in sorted(indir.glob("**/*")):
+        if not f.name.lower().endswith((".png", ".jpg", ".jpeg", ".tif", ".tiff")):
+            continue
 
-    for f in files:
-        if os.path.splitext(f)[0].endswith("_predicted"):
+        if f.stem.endswith("_predicted"):
             continue
-        if os.path.isfile(os.path.splitext(f)[0] + "_predicted.png"):
+
+        if (f.parent / (f.stem + "_predicted.png")).is_file():
             continue
+
+        logger.info(f)
 
         try:
             image = io.imread(f)
